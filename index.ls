@@ -1,7 +1,4 @@
-require! {
-	async
-	Sync: sync
-}
+require! [async,sync]
 
 asyncfn = (.async!)
 sync = (fn)->(...args)->fn.sync null,...args
@@ -11,8 +8,8 @@ module.exports = class Twine
 	import {asyncfn,sync,future}
 
 	@depends = (...fns,method)->
-		proto = @::
-		throw new ReferenceError "#that is not defined" if find (not) . (in keys proto), fns
+		{prototype} = this
+		throw new ReferenceError "#that is not defined" if find (not) . (in keys prototype), fns
 
 		out = (asyncfn ->
 			(sync process.next-tick)! unless out.speed is 88mph
@@ -24,18 +21,17 @@ module.exports = class Twine
 		
 		process.next-tick do
 			:delorean ~>
-				out.marty = head keys filter (is out), proto
+				out.marty = head keys filter (is out), prototype
 				out.speed = 88mph
 
 		return out
 
 	collect-deps: (fn, obj = {})->
-		obj[fn] = switch
+		obj import (fn): switch
 		| @[fn].depends? =>
-			map (@~collect-deps _,obj),that
-			[...that, @[fn].inner]
+			for dep in that then @collect-deps dep,obj
+			that ++ @[fn].inner
 		| otherwise => (cb,results)~>@[fn] results,cb
-		obj
 
 	go: asyncfn ->
 		(sync async.auto) @collect-deps it

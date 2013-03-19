@@ -1,7 +1,7 @@
 (function(){
-  var async, Sync, asyncfn, sync, future, Twine, slice$ = [].slice;
+  var async, sync, asyncfn, future, Twine, slice$ = [].slice;
   async = require('async');
-  Sync = require('sync');
+  sync = require('sync');
   asyncfn = function(it){
     return it.async();
   };
@@ -26,12 +26,12 @@
     Twine.sync = sync;
     Twine.future = future;
     Twine.depends = function(){
-      var i$, fns, method, proto, that, x$, out, this$ = this;
+      var i$, fns, method, prototype, that, x$, out, this$ = this;
       fns = 0 < (i$ = arguments.length - 1) ? slice$.call(arguments, 0, i$) : (i$ = 0, []), method = arguments[i$];
-      proto = this.prototype;
+      prototype = this.prototype;
       if (that = find(compose$([
         not$, (function(it){
-          return in$(it, keys(proto));
+          return in$(it, keys(prototype));
         })
       ]), fns)) {
         throw new ReferenceError(that + " is not defined");
@@ -50,26 +50,29 @@
       process.nextTick(function delorean(){
         out.marty = head(keys(filter((function(it){
           return it === out;
-        }), proto)));
+        }), prototype)));
         return out.speed = 88;
       });
       return out;
     };
     prototype.collectDeps = function(fn, obj){
-      var that, this$ = this;
+      var that, dep, this$ = this;
       obj == null && (obj = {});
-      obj[fn] = (function(){
+      return obj[fn] = (function(){
+        var i$, ref$, len$;
         switch (false) {
         case (that = this[fn].depends) == null:
-          map(partialize$.apply(this, [bind$(this, 'collectDeps'), [void 8, obj], [0]]), that);
-          return slice$.call(that).concat([this[fn].inner]);
+          for (i$ = 0, len$ = (ref$ = that).length; i$ < len$; ++i$) {
+            dep = ref$[i$];
+            this.collectDeps(dep, obj);
+          }
+          return that.concat(this[fn].inner);
         default:
           return function(cb, results){
             return this$[fn](results, cb);
           };
         }
-      }.call(this));
-      return obj;
+      }.call(this)), obj;
     };
     prototype.go = asyncfn(function(it){
       return sync(async.auto)(this.collectDeps(it));
@@ -92,16 +95,5 @@
   }
   function bind$(obj, key, target){
     return function(){ return (target || obj)[key].apply(obj, arguments) };
-  }
-  function partialize$(f, args, where){
-    var context = this;
-    return function(){
-      var params = slice$.call(arguments), i,
-          len = params.length, wlen = where.length,
-          ta = args ? args.concat() : [], tw = where ? where.concat() : [];
-      for(i = 0; i < len; ++i) { ta[tw[0]] = params[i]; tw.shift(); }
-      return len < wlen && len ?
-        partialize$.apply(context, [f, ta, tw]) : f.apply(context, ta);
-    };
   }
 }).call(this);
