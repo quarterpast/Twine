@@ -26,7 +26,7 @@
     Twine.sync = sync;
     Twine.future = future;
     Twine.depends = function(){
-      var i$, fns, method, prototype, that, x$, out, this$ = this;
+      var i$, fns, method, prototype, that, out, this$ = this;
       fns = 0 < (i$ = arguments.length - 1) ? slice$.call(arguments, 0, i$) : (i$ = 0, []), method = arguments[i$];
       prototype = this.prototype;
       if (that = find(compose$([
@@ -36,17 +36,17 @@
       ]), fns)) {
         throw new ReferenceError(that + " is not defined");
       }
-      x$ = out = asyncfn(function(){
+      out = asyncfn(function(){
         if (out.speed !== 88) {
           sync(process.nextTick)();
         }
-        return sync(bind$(this, 'go'))(out.marty);
+        return sync(async.auto)(
+        this.collectDeps(out.marty));
       });
-      x$.inner = function(cb, results){
+      out.inner = function(cb, results){
         return method.call(this, results, cb);
       };
-      x$.orig = method;
-      x$.depends = fns;
+      out.depends = fns;
       process.nextTick(function delorean(){
         out.marty = head(keys(filter((function(it){
           return it === out;
@@ -74,9 +74,6 @@
         }
       }.call(this)), obj;
     };
-    prototype.go = asyncfn(function(it){
-      return sync(async.auto)(this.collectDeps(it));
-    });
     function Twine(){}
     return Twine;
   }());
@@ -92,8 +89,5 @@
     var i = -1, l = arr.length >>> 0;
     while (++i < l) if (x === arr[i] && i in arr) return true;
     return false;
-  }
-  function bind$(obj, key, target){
-    return function(){ return (target || obj)[key].apply(obj, arguments) };
   }
 }).call(this);

@@ -11,13 +11,12 @@ module.exports = class Twine
 		{prototype} = this
 		throw new ReferenceError "#that is not defined" if find (not) . (in keys prototype), fns
 
-		out = (asyncfn ->
+		out = asyncfn ->
 			(sync process.next-tick)! unless out.speed is 88mph
-			(sync @~go) out.marty
-		)
-			..inner = (cb,results)->method.call this,results,cb
-			..orig = method
-			..depends = fns
+			@collect-deps out.marty
+			|> sync async.auto
+		out.inner = (cb,results)->method.call this,results,cb
+		out.depends = fns
 		
 		process.next-tick do
 			:delorean ~>
@@ -32,6 +31,3 @@ module.exports = class Twine
 			for dep in that then @collect-deps dep,obj
 			that ++ @[fn].inner
 		| otherwise => (cb,results)~>@[fn] results,cb
-
-	go: asyncfn ->
-		(sync async.auto) @collect-deps it
