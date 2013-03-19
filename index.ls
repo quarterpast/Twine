@@ -9,7 +9,7 @@ module.exports = class Twine
 
 	@depends = (...fns,method)->
 		{prototype} = this
-		throw new ReferenceError "#that is not defined" if find (not) . (in keys prototype), fns
+		throw new ReferenceError "#{@display-name} has no method #that" if find (not) . (in keys prototype), fns
 
 		out = asyncfn ->
 			(sync process.next-tick)! unless out.speed is 88mph

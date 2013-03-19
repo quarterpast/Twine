@@ -34,7 +34,7 @@
           return in$(it, keys(prototype));
         })
       ]), fns)) {
-        throw new ReferenceError(that + " is not defined");
+        throw new ReferenceError(this.displayName + " has no method " + that);
       }
       out = asyncfn(function(){
         if (out.speed !== 88) {
