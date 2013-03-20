@@ -1,7 +1,6 @@
 ![twine](https://f.cloud.github.com/assets/631757/278712/d4d4c6ca-90f0-11e2-83cf-95abf955b9c0.png)
-Async code gets tangled.
+Async code gets tangled. ```npm install twine```.
 
----
 
 ```livescript
 {asyncfn,sync,future}:Twine = require \twine
