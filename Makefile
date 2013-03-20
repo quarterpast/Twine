@@ -20,3 +20,6 @@ watch:
 
 test: all
 	@for file in $(TEST_FILES); do lsc $$file; done
+
+publish: all
+	npm publish

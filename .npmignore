@@ -1,1 +1,3 @@
 *.ls
+test
+Makefile
