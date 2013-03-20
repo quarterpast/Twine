@@ -1,4 +1,5 @@
-require! [async,sync]
+require! async
+require \sync
 
 asyncfn = (.async!)
 sync = (fn)->(...args)->fn.sync null,...args
@@ -29,5 +30,5 @@ module.exports = class Twine
 		obj import (fn): switch
 		| @[fn].depends? =>
 			for dep in that then @collect-deps dep,obj
-			that ++ @[fn].inner
+			that ++ @[fn].innernn
 		| otherwise => (cb,results)~>@[fn] results,cb
