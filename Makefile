@@ -1,7 +1,9 @@
 LS_OPTS=-k
 
-LS_FILES=index.ls
+LS_FILES = index.ls
 JS_FILES = $(patsubst %.ls, %.js, $(LS_FILES))
+
+TEST_FILES = $(shell find test/ -type f -name '*-test.ls')
 
 .PHONY: all
 all: $(JS_FILES)
@@ -15,3 +17,6 @@ clean:
 
 watch:
 	@while :; do inotifywait -qr -e modify -e create src; make; sleep 1; done
+
+test: all
+	@for file in $(TEST_FILES); do lsc $$file; done
