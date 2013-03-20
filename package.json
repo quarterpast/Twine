@@ -1,6 +1,18 @@
 {
   "name": "twine",
-  "version": "0.0.0",
+  "version": "0.0.1",
+  "author": "Matt Brennan <matt.brennan@import.io>",
+  "description": "Untangle and wrap together your async",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/quarterto/Twine.git"
+  },
+  "licenses": [
+    {
+      "type": "MIT",
+      "url": "https://github.com/quarterto/Twine/blob/master/licence.md"
+    }
+  ],
   "dependencies": {
     "async": "~0.2.6",
     "sync": "~0.2.2"
